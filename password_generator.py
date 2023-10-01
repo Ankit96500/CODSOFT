@@ -1,0 +1,68 @@
+from tkinter import *
+import time
+from pwgenfunc import RandPass
+
+#=====================================METHODS===================================
+def pwGenerator(size = 8):
+    data = RandPass(size)
+    new_password = data[0]
+    pw_strength = data[1]
+    pw_color = data[2]
+    PASSWORD.set(new_password);
+    label_strength.configure(foreground="grey", background=pw_color, text=pw_strength, font=('sans serif', 10, 'bold'), bd=10, height=1, width=10)
+    gui.clipboard_clear()
+    gui.clipboard_append(new_password)
+    gui.update()
+    time.sleep(.02)
+    gui.update()
+    gui.mainloop()
+
+#=====================================WINDOW===================================
+gui = Tk()
+gui.title("Password Generator")
+width = 500
+height = 262
+screen_width = gui.winfo_screenwidth()
+screen_height = gui.winfo_screenheight()
+x_axis = (screen_width/2) - (width/2)
+y_axis = (screen_height/2) - (height/2)
+gui.geometry("%dx%d+%d+%d" % (width, height, x_axis, y_axis))
+
+
+#====================================VARIABLES==================================
+PASSWORD = StringVar()
+PW_SIZE = IntVar()
+e1 = Entry(gui, text=PW_SIZE)
+PW_SIZE.set(8) # sets the default value for PW size/length
+
+#====================================FRAME======================================
+Top = Frame(gui, width=width)
+Top.pack(side=TOP)
+Form = Frame(gui, width=width)
+Form.pack(side=TOP)
+Bot = Frame(gui, width=width)
+Bot.pack(side=BOTTOM)
+
+#====================================LABEL WIDGET===============================
+
+label_password = Label(Form, font=('sans serif', 18), text="Password", bd=10)
+label_password.grid(row=0, pady=10)
+label_strength = Label(Form, font=('sans serif', 10, 'bold'), foreground="white", background="#6d0005", text="Weak", bd=10, height=1, width=10)
+label_strength.grid(row=0, column=3, pady=10, padx=10)
+label_password_size = Label(Form, font=('sans serif', 18), text="Size", bd=10)
+label_password_size.grid(row=1, pady=10)
+label_instructions = Label(Bot, width=width, font=('sans serif', 12, 'bold'), text="Output will show here", bd=1, relief=SOLID)
+label_instructions.pack(fill=X)
+
+#====================================ENTRY WIDGET===============================
+password = Entry(Form, textvariable=PASSWORD, font=(18), width=24)
+password.grid(row=0, column=1, columnspan=2)
+pw_size = Scale(Form, from_=8, to=24, length=230,width=24,sliderlength=14, orient=HORIZONTAL, variable=PW_SIZE, font=(18))
+pw_size.grid(row=1, column=1, columnspan=2)
+
+#====================================BUTTON WIDGET==============================
+
+btn_generate = Button(Form, text="CREATE", width=20, command=lambda: pwGenerator(PW_SIZE))
+btn_generate.grid(row=2, column=1, columnspan=2)
+
+gui.mainloop()
